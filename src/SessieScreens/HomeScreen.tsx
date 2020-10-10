@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, NativeModules } from 'react-native';
+import { ActivityIndicator, Button, NativeModules } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {HomeScreenProps} from '../Routes/SessieRoute';
 

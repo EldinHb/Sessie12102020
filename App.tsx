@@ -19,9 +19,9 @@ import {
   StatusBar, Button, NativeModules
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { SessieStack } from './Routes/SessieRoute';
-import { HomeScreen } from './SessieScreens/HomeScreen';
-import { HeroScreen } from './HeroScreen';
+import { SessieStack } from './src/Routes/SessieRoute';
+import { HomeScreen } from './src/SessieScreens/HomeScreen';
+import { HeroScreen } from './src/SessieScreens/HeroScreen';
 
 declare const global: {HermesInternal: null | {}};
 

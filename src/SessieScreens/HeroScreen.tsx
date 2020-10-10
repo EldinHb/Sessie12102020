@@ -1,13 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import * as React from 'react';
-import { Image, ListRenderItemInfo, Text, View } from 'react-native';
-import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ActivityIndicator, Image, ListRenderItemInfo, FlatList, Text, View } from 'react-native';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SharedElement } from 'react-navigation-shared-element';
-import { NewsApi, NewsItem } from './Library/NewsApi';
-import { HeroStack } from './Routes/HeroRoute';
-import { HeroScreenProps } from './Routes/SessieRoute';
-import { ImageScreen } from './SessieScreens/ImageScreen';
+import { NewsApi, NewsItem } from '../Library/NewsApi';
+import { HeroStack } from '../Routes/HeroRoute';
+import { HeroScreenProps } from '../Routes/SessieRoute';
+import { ImageScreen } from './ImageScreen';
 
 const HeroScreen = ({route, navigation}: HeroScreenProps) => {
     return(
@@ -32,15 +32,20 @@ const HeroScreen = ({route, navigation}: HeroScreenProps) => {
 
 const TestScreen = ({route, navigation}: HeroScreenProps) => {
     const [news, setNews] = React.useState<NewsItem[]>();
+    const [refreshing, setRefreshing] = React.useState(false);
 
     React.useEffect(() => {
         const getImgsAsync = async () => {
-            const newsApi = new NewsApi();
-            setNews(await newsApi.getNews(20));
+            await getData();
         };
 
         getImgsAsync();
     }, []);
+
+    async function getData() {
+        const newsApi = new NewsApi();
+        setNews(await newsApi.getNews(20));
+    }
 
     function _onItemPress(newsItem: NewsItem) {
         navigation.navigate('HeroImage', {item: newsItem});
@@ -76,18 +81,25 @@ const TestScreen = ({route, navigation}: HeroScreenProps) => {
         );
     }
 
+    async function _onPullToRefresh() {
+        setRefreshing(true);
+        await getData();
+        setRefreshing(false);
+    }
+
+    if (!news || news.length < 1) {
+        return(
+            <View>
+                <ActivityIndicator size='large' color="#000"/>
+            </View>
+        );
+    }
+
     return(
             <View>
-                {/* <TouchableOpacity onPress={() => _onImgPress()}>
-                    <SharedElement id='HeaderImage'>
-                        <Image style={{width: 200, height:200}} 
-                        resizeMode='cover'
-                        source={{
-                            uri: 'https://picsum.photos/1000/600'
-                        }}/>
-                    </SharedElement>
-                </TouchableOpacity> */}
                 <FlatList
+                onRefresh={_onPullToRefresh}
+                refreshing={refreshing}
                 data={news}
                 renderItem={(item) => renderFlatListItem(item)}
                 />
