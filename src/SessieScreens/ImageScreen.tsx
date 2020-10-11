@@ -5,15 +5,6 @@ import { HeroImageScreenProps, HeroScreenProps } from '../Routes/SessieRoute';
 
 const ImageScreen = ({route, navigation}: HeroImageScreenProps) => {
     const dimensions = Dimensions.get('screen');
-    const [imageWidth, setImageWidth] = React.useState(0);
-    const [imageHeight, setImageHeight] = React.useState(0);
-
-    React.useEffect(() => {
-        Image.getSize(route.params.item.imageUrl, (width, height) => {
-            setImageWidth(width);
-            setImageHeight(height);
-        });
-    }, []);
 
     return( 
         <View style={{
@@ -28,9 +19,16 @@ const ImageScreen = ({route, navigation}: HeroImageScreenProps) => {
                     uri: route.params.item.imageUrl
                 }}/>
             </SharedElement>
-            <Text>
-                {route.params.item.title}
-            </Text>
+            <View style={{
+                padding: 15
+            }}>
+                <Text>
+                    {route.params.item.title}
+                </Text>
+                <Text>
+                    {route.params.item.content}
+                </Text>
+            </View>
 
         </View>
     );

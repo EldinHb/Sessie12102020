@@ -13,7 +13,7 @@ const HeroScreen = ({route, navigation}: HeroScreenProps) => {
     return(
             <HeroStack.Navigator>
                 <HeroStack.Screen name='HeroHome' 
-                component={TestScreen} 
+                component={ListScreen} 
                 initialParams={{url: route.params.url}}
                 options={{
                     headerShown: true,
@@ -30,7 +30,7 @@ const HeroScreen = ({route, navigation}: HeroScreenProps) => {
     );
 };
 
-const TestScreen = ({route, navigation}: HeroScreenProps) => {
+const ListScreen = ({route, navigation}: HeroScreenProps) => {
     const [news, setNews] = React.useState<NewsItem[]>();
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -72,9 +72,19 @@ const TestScreen = ({route, navigation}: HeroScreenProps) => {
                     resizeMode='cover'
                     />
                 </SharedElement>
-                <Text>
-                    {listItem.item.title}
-                </Text>
+                <View style={{
+                    flex: 2,
+                    marginLeft: 10
+                }}>
+                    <Text >
+                        {listItem.item.title}
+                    </Text>
+                    <Text style={{
+                        fontSize: 10
+                    }}>
+                        {listItem.item.subTitle}
+                    </Text>
+                </View>
 
             </View>
             </TouchableOpacity>
@@ -85,6 +95,19 @@ const TestScreen = ({route, navigation}: HeroScreenProps) => {
         setRefreshing(true);
         await getData();
         setRefreshing(false);
+    }
+
+    function separator() {
+        return (
+            <View 
+                style={{
+                    height: 0.5,
+                    backgroundColor: 'grey',
+                    marginLeft: 15,
+                    marginRight: 15
+                }}
+            />
+        );
     }
 
     if (!news || news.length < 1) {
@@ -101,6 +124,7 @@ const TestScreen = ({route, navigation}: HeroScreenProps) => {
                 onRefresh={_onPullToRefresh}
                 refreshing={refreshing}
                 data={news}
+                ItemSeparatorComponent={() => separator()}
                 renderItem={(item) => renderFlatListItem(item)}
                 />
             </View>
